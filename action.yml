@@ -38,6 +38,9 @@ inputs:
   allow_reresolve:
     description: 'Whether to allow re-resolving of package versions in the test environment. Only effective on Julia 1.9+. Options: true | false. Default value: true'
     default: 'true'
+  args:
+    description: 'Arguments string that is passed on to julia.'
+    default: ''
   test_args:
     description: 'Arguments string that is passed on to test.'
     default: ''
@@ -60,7 +63,7 @@ runs:
       if: inputs.annotate == 'true'
     - run: |
         # The Julia command that will be executed
-        julia_cmd=( julia --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
+        julia_cmd=( julia --color=yes --inline=${{ inputs.inline }} --project=${{ inputs.project }} ${{ inputs.args }} -e 'include(joinpath(ENV["GITHUB_ACTION_PATH"], "test_harness.jl"))' -- ${{inputs.test_args}} )
 
         # Add the prefix in front of the command if there is one
         prefix=( ${{ inputs.prefix }} )
